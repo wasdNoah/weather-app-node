@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node index.js"
   },
   "repository": {
     "type": "git",
@@ -16,5 +16,9 @@
   "bugs": {
     "url": "https://github.com/wasdNoah/weather-app-node/issues"
   },
-  "homepage": "https://github.com/wasdNoah/weather-app-node#readme"
+  "homepage": "https://github.com/wasdNoah/weather-app-node#readme",
+  "dependencies": {
+    "colors": "^1.4.0",
+    "inquirer": "^8.2.0"
+  }
 }
