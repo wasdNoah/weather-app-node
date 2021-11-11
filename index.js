@@ -15,7 +15,7 @@ const main = async () => {
             case 1: //search by city's name
 
                 const city = await readInput('Type city\'s name: ');
-                console.log(city);
+                await search.searchCity(city);
             
                 console.log('\nCity data: \n'.green);
                 console.log('City: ',);
