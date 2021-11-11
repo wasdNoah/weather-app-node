@@ -84,7 +84,5 @@ module.exports = {
     mainMenu,
     pause,
     readInput,
-    listadoTareasBorrar,
     confirm,
-    mostrarListadoCheckList
 }
