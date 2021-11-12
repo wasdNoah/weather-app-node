@@ -75,9 +75,39 @@ const confirm = async (message) => {
         }
     ];
 
-    const {ok} = await inquirer.prompt(question);
+    const { ok } = await inquirer.prompt(question);
 
     return ok;
+}
+
+//receives an array with the coincidences
+const listLocations = async (locations = []) => {
+
+    const choices = locations.map((location, i) => {
+        const idx = `${i + 1}.`.green;
+
+        return {
+            value: location.id,
+            name: `${idx} ${location.name}`
+        }
+    });
+
+    choices.unshift({
+        value: '0',
+        name: '0.'.green + ' Cancel'
+    });
+
+    const questions = [
+        {
+            type: 'list',
+            name: 'id',
+            message: 'Select a location',
+            choices
+        }
+    ]
+
+    const { id } = await inquirer.prompt(questions);
+    return id;
 }
 
 module.exports = {
@@ -85,4 +115,5 @@ module.exports = {
     pause,
     readInput,
     confirm,
+    listLocations
 }

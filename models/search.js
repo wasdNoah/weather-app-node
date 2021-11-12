@@ -16,26 +16,27 @@ class Search {
     }
 
     //this method returns coincidences of a given city name
-    async searchCity(city = '') {
+    async searchLocation(location = '') {
 
         try {
 
             const instance = axios.create({
-                baseURL: `https://api.mapbox.com/geocoding/v5/mapbox.places/${city}.json`,
+                baseURL: `https://api.mapbox.com/geocoding/v5/mapbox.places/${location}.json`,
                 params: this.paramsMapbox
             });
 
             const resp = await instance.get();
 
-            console.log(resp.data);
+            return resp.data.features.map(location => ({
+                id: location.id,
+                name: location.place_name,
+                lng: location.center[0],
+                lat: location.center[1],
+            }));
 
         } catch (error) {
             return [];
         }
-
-
-
-        return [];
     }
 }
 
