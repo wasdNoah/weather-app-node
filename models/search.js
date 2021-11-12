@@ -15,6 +15,13 @@ class Search {
         }
     }
 
+    get paramsOpenWeather() {
+        return {
+            'appid': process.env.OPENWEATHER_KEY,
+            'units': 'metric'
+        }
+    }
+
     //this method returns coincidences of a given city name
     async searchLocation(location = '') {
 
@@ -38,6 +45,35 @@ class Search {
             return [];
         }
     }
+
+    async locationWeather(lat, lon) {
+        try {
+            
+            //axios instance
+            const instance = axios.create({
+                baseURL: `https://api.openweathermap.org/data/2.5/weather`,
+                params: {
+                    ...this.paramsOpenWeather,
+                    lat,
+                    lon
+                }
+            });
+
+            //retrieving data
+            const resp = await instance.get();
+            const {weather, main} = resp.data;
+
+            return {
+                desc: weather[0].description,
+                temp: main.temp,
+                temp_min: main.temp_min,
+                temp_max: main.temp_max,
+            }
+            
+        } catch (error) {
+            console.log(error);
+        }
+    } 
 }
 
 module.exports = Search;

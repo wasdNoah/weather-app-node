@@ -4,39 +4,43 @@ const { readInput, mainMenu, pause, listLocations } = require("./helpers/inquire
 const Search = require("./models/search");
 
 const main = async () => {
-    
+
     const search = new Search();
     let opt;
 
     do {
 
-        opt =  await mainMenu();
+        opt = await mainMenu();
         console.log(`Selected option: ${opt}`);
 
         switch (opt) {
-            case 1: //search by city's name
+            case 1: //search by locations's name
 
                 //display message
                 const city = await readInput('Type city\'s name: ');
-                
+
                 //search locations
                 const locations = await search.searchLocation(city);
 
                 //select a location
                 const id = await listLocations(locations);
                 const selected_location = locations.find(loc => loc.id === id);
-            
-                console.log('\n Location info \n'.green);
-                console.log('City/location: ', selected_location.name);
+                const weather_details = await search.locationWeather(selected_location.lat, selected_location.lng);
+
+                //display results
+                console.clear();
+                console.log('\n-------- Location info -------\n'.green);
+                console.log('City/location: ', selected_location.name.green);
                 console.log('Lat: ', selected_location.lat);
                 console.log('Lng: ', selected_location.lng);
-                // console.log('Temperature', );
-                // console.log('Min: ', );
-                // console.log('Max: ', );
-                
+                console.log('Temperature: ', weather_details.temp);
+                console.log('Min temperature: ', weather_details.temp_min);
+                console.log('Max temperature: ', weather_details.temp_max);
+                console.log('Looking like', weather_details.desc.green);
+
                 break;
         }
-        
+
         await pause();
 
     } while (opt !== 0)
