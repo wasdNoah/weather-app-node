@@ -24,7 +24,16 @@ const main = async () => {
 
                 //select a location
                 const id = await listLocations(locations);
+
+                //if user selects 0 it should cancel
+                if (id === 0) {
+                    continue
+                }
+
                 const selected_location = locations.find(loc => loc.id === id);
+                //write in db
+                search.historyAdd(selected_location.name);
+
                 const weather_details = await search.locationWeather(selected_location.lat, selected_location.lng);
 
                 //display results
@@ -37,6 +46,15 @@ const main = async () => {
                 console.log('Min temperature: ', weather_details.temp_min);
                 console.log('Max temperature: ', weather_details.temp_max);
                 console.log('Looking like', weather_details.desc.green);
+
+                break;
+
+            case 2:
+                search.history.forEach((location, i) => {
+                    const idx = `${i + 1}.`.green;
+                    
+                    console.log(`${idx} ${location}`);
+                })
 
                 break;
         }

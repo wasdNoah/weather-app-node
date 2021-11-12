@@ -1,10 +1,13 @@
+const fs = require('fs');
+
 const axios = require('axios');
 
 class Search {
-    history = ['Madrid', 'Los Angeles', 'San Jose'];
+    history = [];
+    pathDB = './db/database.json';
 
     constructor() {
-        //TODO: read DB if it exists
+        this.readDB();
     }
 
     get paramsMapbox() {
@@ -48,7 +51,7 @@ class Search {
 
     async locationWeather(lat, lon) {
         try {
-            
+
             //axios instance
             const instance = axios.create({
                 baseURL: `https://api.openweathermap.org/data/2.5/weather`,
@@ -61,7 +64,7 @@ class Search {
 
             //retrieving data
             const resp = await instance.get();
-            const {weather, main} = resp.data;
+            const { weather, main } = resp.data;
 
             return {
                 desc: weather[0].description,
@@ -69,11 +72,42 @@ class Search {
                 temp_min: main.temp_min,
                 temp_max: main.temp_max,
             }
-            
+
         } catch (error) {
             console.log(error);
         }
-    } 
+    }
+
+    historyAdd(location = '') {
+        //prevent duplicate values
+        if (this.history.includes(location)) {
+            return;
+        }
+        
+        this.history = this.history.splice(0,5);
+        this.history.unshift(location);
+
+        //write in json file
+        this.writeDB();
+    }
+
+    writeDB() {
+        const payload = {
+            history: this.history
+        };
+
+        fs.writeFileSync(this.pathDB, JSON.stringify(payload));
+    }
+
+    readDB() {
+        if (!fs.existsSync(this.pathDB)) return;
+
+        const info = fs.readFileSync(this.pathDB, {encoding: 'utf-8'});
+        const data = JSON.parse(info);
+
+        this.history = data.history;
+    }
+
 }
 
 module.exports = Search;
